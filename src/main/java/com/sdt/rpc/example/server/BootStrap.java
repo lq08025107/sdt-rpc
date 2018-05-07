@@ -11,6 +11,5 @@ public class BootStrap {
     public static void main(String[] args){
         LOGGER.debug("start server");
         new ClassPathXmlApplicationContext("spring_server.xml");
-        new ClassPathXmlApplicationContext("spring_server_1.xml");
     }
 }
