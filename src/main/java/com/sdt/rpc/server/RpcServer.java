@@ -5,6 +5,7 @@ import com.sdt.rpc.common.bean.RpcResponse;
 import com.sdt.rpc.common.codec.RpcDecoder;
 import com.sdt.rpc.common.codec.RpcEncoder;
 import com.sdt.rpc.common.util.CollectionUtil;
+import com.sdt.rpc.common.util.NetUtil;
 import com.sdt.rpc.common.util.StringUtil;
 import com.sdt.rpc.registry.ServiceRegistry;
 import io.netty.bootstrap.ServerBootstrap;
@@ -38,6 +39,8 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
         this.serviceAddress = serviceAddress;
         this.serviceRegistry = serviceRegistry;
     }
+    public RpcServer(ServiceRegistry registry){this.serviceRegistry = registry;}
+
     public void afterPropertiesSet() throws Exception {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -50,8 +53,11 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
                 @Override
                 protected void initChannel(SocketChannel socketChannel) throws Exception {
                     ChannelPipeline pipeline = socketChannel.pipeline();
+                    //入站
                     pipeline.addLast(new RpcDecoder(RpcRequest.class));
+                    //出站
                     pipeline.addLast(new RpcEncoder(RpcResponse.class));
+                    //入站
                     pipeline.addLast(new RpcServerHandler(handlerMap));
                 }
             });
@@ -61,8 +67,10 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
             String[] address = StringUtil.split(serviceAddress, ":");
             String ip = address[0];
 
-
             int port = Integer.parseInt(address[1]);
+
+            //String hostAddr = NetUtil.getLocalHost();
+            //String port = new Integer(NetUtil.getAvailablePort(9000)).toString();
 
             ChannelFuture future = bootstrap.bind(ip, port).sync();
 

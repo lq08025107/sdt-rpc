@@ -18,6 +18,7 @@ public class ZookeeperServiceDiscovery implements ServiceDiscovery {
     public ZookeeperServiceDiscovery(String zkAddress){
         this.zkAddress = zkAddress;
     }
+
     public String discover(String serviceName) {
         ZkClient zkClient = new ZkClient(zkAddress, Constant.ZK_SESSION_TIMEOUT, Constant.ZK_CONNECTION_TIMEOUT);
         LOGGER.debug("connect zookeeper");

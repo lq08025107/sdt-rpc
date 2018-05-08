@@ -12,6 +12,7 @@ import org.springframework.cglib.reflect.FastClass;
 import org.springframework.cglib.reflect.FastMethod;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Map;
 
 public class RpcServerHandler extends SimpleChannelInboundHandler<RpcRequest> {
@@ -35,7 +36,7 @@ public class RpcServerHandler extends SimpleChannelInboundHandler<RpcRequest> {
         channelHandlerContext.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
     }
 
-    private Object handle(RpcRequest request) throws InvocationTargetException {
+    private Object handle(RpcRequest request) throws Exception {
         String serviceName = request.getInterfaceName();
         String serviceVersion = request.getServiceVersion();
         if(StringUtil.isNotEmpty(serviceVersion)){
@@ -52,8 +53,13 @@ public class RpcServerHandler extends SimpleChannelInboundHandler<RpcRequest> {
         Class<?>[] parameterTypes = request.getParameterTypes();
         Object[] parameters = request.getParameters();
 
-        FastClass serviceFastClass = FastClass.create(serviceClass);
-        FastMethod serviceMethod = serviceFastClass.getMethod(methodName, parameterTypes);
-        return serviceMethod.invoke(serviceBean, parameters);
+        //使用jdk自带反射
+        Object o = serviceClass.newInstance();
+        Method method = serviceClass.getMethod(methodName, parameterTypes);
+        return method.invoke(o, parameters);
+        //使用cglib
+//        FastClass serviceFastClass = FastClass.create(serviceClass);
+//        FastMethod serviceMethod = serviceFastClass.getMethod(methodName, parameterTypes);
+//        return serviceMethod.invoke(serviceBean, parameters);
     }
 }

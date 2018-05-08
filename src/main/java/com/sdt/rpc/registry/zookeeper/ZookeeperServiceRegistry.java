@@ -31,4 +31,9 @@ public class ZookeeperServiceRegistry implements ServiceRegistry {
         String addressNode = zkClient.createEphemeralSequential(addressPath, serviceAddress);
         LOGGER.debug("create address node: {}", addressNode);
     }
+
+    public static void main(String[] args){
+        ZookeeperServiceRegistry registry = new ZookeeperServiceRegistry("localhost:2181");
+        registry.registry("test", "10.25.18.40");
+    }
 }
