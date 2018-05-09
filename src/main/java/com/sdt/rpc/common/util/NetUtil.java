@@ -236,5 +236,6 @@ public class NetUtil {
         String hostAddr = NetUtil.getLocalHost();
         String port = new Integer(NetUtil.getAvailablePort(9000)).toString();
         System.out.println(String.format("host: %s, port: %s", hostAddr, port));
+
     }
 }
