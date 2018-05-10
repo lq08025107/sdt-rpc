@@ -16,7 +16,7 @@
     </bean>
 
     <bean id="rpcServer" class="com.sdt.rpc.server.RpcServer">
-        <constructor-arg name="serviceAddress" value="${rpc.service_address}"/>
+        <!--<constructor-arg name="serviceAddress" value="${rpc.service_address}"/>-->
         <constructor-arg name="serviceRegistry" ref="sreviceReigstry"/>
     </bean>
 </beans>

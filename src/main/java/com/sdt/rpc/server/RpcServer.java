@@ -32,13 +32,13 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
 
     private Map<String, Object> handlerMap = new HashMap<>();
 
-    public RpcServer(String serviceAddress){
-        this.serviceAddress = serviceAddress;
-    }
-    public RpcServer(String serviceAddress, ServiceRegistry serviceRegistry){
-        this.serviceAddress = serviceAddress;
-        this.serviceRegistry = serviceRegistry;
-    }
+//    public RpcServer(String serviceAddress){
+//        this.serviceAddress = serviceAddress;
+//    }
+//    public RpcServer(String serviceAddress, ServiceRegistry serviceRegistry){
+//        this.serviceAddress = serviceAddress;
+//        this.serviceRegistry = serviceRegistry;
+//    }
     public RpcServer(ServiceRegistry registry){this.serviceRegistry = registry;}
 
     public void afterPropertiesSet() throws Exception {
@@ -64,15 +64,15 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
             bootstrap.option(ChannelOption.SO_BACKLOG, 1024);
             bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
 
-            String[] address = StringUtil.split(serviceAddress, ":");
-            String ip = address[0];
+            //String[] address = StringUtil.split(serviceAddress, ":");
+            //String ip = address[0];
 
-            int port = Integer.parseInt(address[1]);
+            //int port = Integer.parseInt(address[1]);
 
-            //String hostAddr = NetUtil.getLocalHost();
-            //String port = new Integer(NetUtil.getAvailablePort(9000)).toString();
-
-            ChannelFuture future = bootstrap.bind(ip, port).sync();
+            String host = NetUtil.getLocalHost();
+            int port = new Integer(NetUtil.getAvailablePort(9000));
+            serviceAddress = host + ":" + String.valueOf(port);
+            ChannelFuture future = bootstrap.bind(host, port).sync();
 
             if(serviceRegistry != null){
                 for(String interfaceName : handlerMap.keySet()){
